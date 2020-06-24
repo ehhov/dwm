@@ -1,3 +1,12 @@
+My configuration for the suckless dwm
+=====================================
+Original: https://dwm.suckless.org/
+
+Other changes:
+- New make target: entry. You can copy dwm.desktop to 
+  /usr/share/xsessions to be able to run it from a Display Manager.
+
+
 dwm - dynamic window manager
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X.

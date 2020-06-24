@@ -26,7 +26,7 @@ dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
-	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
+	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz dwm.desktop
 
 dist: clean
 	mkdir -p dwm-${VERSION}
@@ -48,4 +48,15 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-.PHONY: all options clean dist install uninstall
+entry:
+	@echo -e "[Desktop Entry]\n\
+	Type=XSession\n\
+	Exec=${DESTDIR}${PREFIX}/bin/dwm\n\
+	#TryExec=${DESTDIR}${PREFIX}/bin/dwm\n\
+	Name=Dynamic Window Manager" \
+	> dwm.desktop
+	@cat dwm.desktop
+	@echo -e "\nYou have to run manually\n\
+		$$ cp dwm.desktop /usr/share/xsessions/"
+
+.PHONY: all options clean dist install uninstall entry
