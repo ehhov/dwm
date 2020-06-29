@@ -17,6 +17,8 @@ Other changes:
  - New make target: entry. You can copy dwm.desktop to 
    /usr/share/xsessions to be able to run it from a Display Manager.
  - A bunch of layouts based on tile(), tilegaps(), deck().
+ - tag() function in dwm.c is modified so that its behavior is analogous 
+   to view(NULL) (follow TAGNULL in dwm.c).
 
 
 dwm - dynamic window manager

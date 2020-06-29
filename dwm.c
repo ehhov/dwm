@@ -1891,6 +1891,10 @@ tag(const Arg *arg)
 		selmon->sel->tags = arg->ui & TAGMASK;
 		focus(NULL);
 		arrange(selmon);
+	} else if (selmon->sel) { /* TAGNULL */
+		selmon->sel->tags = selmon->tagset[selmon->seltags^1];
+		focus(NULL);
+		arrange(selmon);
 	}
 }
 
