@@ -6,6 +6,7 @@ I have applied patches:
  - pertag
  - focusonclick (modified, follow FHOR in dwm.c)
  - cool autostart
+ - systray
 
 Other changes:
  - New make target: entry. You can copy dwm.desktop to 
