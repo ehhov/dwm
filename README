@@ -21,6 +21,7 @@ Other changes:
    to view(NULL) (follow TAGNULL in dwm.c).
  - Window title alignment control (follow TIALIGN in dwm.c).
  - Variable gaps and borders.
+ - Bigger borders for floating windows (follow FLBOR in dwm.c).
 
 
 dwm - dynamic window manager

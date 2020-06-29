@@ -3,6 +3,7 @@
 /* appearance */
 static const unsigned int borderdef = 0;         /* border pixel of windows */
 static       unsigned int borderpx  = borderdef; /* border pixel of windows */
+static const unsigned int borderpxf = 5;         /* floating windows border increment parameter */
 static const unsigned int gapdef    = 5;         /* gap pixel between windows */
 static       unsigned int gappx     = gapdef;    /* gap pixel between windows */
 static const unsigned int snap      = 32;        /* snap pixel */
@@ -434,7 +435,7 @@ void
 setclientborder(Client *c)
 {
 	/* disable borders for full screen windows */
-	c->bw = borderpx * (!c->isfullscreen);
+	c->bw = (borderpx + c->isfloating * borderpxf) * (!c->isfullscreen);
 	XWindowChanges wc;
 	wc.border_width = c->bw;
 	XConfigureWindow(dpy, c->win, CWBorderWidth, &wc);
