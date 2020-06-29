@@ -14,6 +14,7 @@ I have applied patches:
 Other changes:
  - New make target: entry. You can copy dwm.desktop to 
    /usr/share/xsessions to be able to run it from a Display Manager.
+ - A bunch of layouts based on tile(), tilegaps(), deck().
 
 
 dwm - dynamic window manager
