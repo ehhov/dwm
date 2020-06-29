@@ -20,6 +20,7 @@ Other changes:
  - tag() function in dwm.c is modified so that its behavior is analogous 
    to view(NULL) (follow TAGNULL in dwm.c).
  - Window title alignment control (follow TIALIGN in dwm.c).
+ - Variable gaps and borders.
 
 
 dwm - dynamic window manager

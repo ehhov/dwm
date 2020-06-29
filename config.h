@@ -1,19 +1,21 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int gappx     = 5;        /* gap pixel between windows */
-static const int showsystray        = 1;        /* 0 means no systray */
-static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 1;        /* 0 means bottom bar */
-static const int title_alignment    = 1;        /* 0 is right, 1 is title block centered, 2 is left */
+static const unsigned int borderdef = 0;         /* border pixel of windows */
+static       unsigned int borderpx  = borderdef; /* border pixel of windows */
+static const unsigned int gapdef    = 5;         /* gap pixel between windows */
+static       unsigned int gappx     = gapdef;    /* gap pixel between windows */
+static const unsigned int snap      = 32;        /* snap pixel */
+static const int showsystray        = 1;         /* 0 means no systray */
+static const int showbar            = 1;         /* 0 means no bar */
+static const int topbar             = 1;         /* 0 means bottom bar */
+static const int title_alignment    = 1;         /* 0 is right, 1 is title block centered, 2 is left */
 static const int focusonwheel       = 0;
 static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
-static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
-static const unsigned int systrayspacing = 2;   /* systray spacing */
-static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, 0: display systray on the last monitor*/
+static const unsigned int systraypinning = 0;    /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayspacing = 2;    /* systray spacing */
+static const int systraypinningfailfirst = 1;    /* 1: if pinning fails, display systray on the first monitor, 0: display systray on the last monitor*/
 static const char col_gray1[]            = "#222222";
 static const char col_gray2[]            = "#444444";
 static const char col_gray3[]            = "#bbbbbb";
@@ -35,6 +37,9 @@ static void monocle_gaps(Monitor *m);
 static void focusurgent(const Arg *arg);
 static void movestack(const Arg *arg);
 static void resetlayout(const Arg *arg);
+static void setborder(const Arg *arg);
+static void setclientborder(Client *c);
+static void setgap(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
 
 /* autostart commands */
@@ -121,6 +126,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_v,      setlayout,      {.v = &layouts[6]} },
 	{ MODKEY,                       XK_a,      setlayout,      {.v = &layouts[7]} },
 	{ MODKEY|ShiftMask,             XK_a,      setlayout,      {.v = &layouts[8]} },
+	{ MODKEY,                       XK_equal,  setgap,         {.i = +1} },
+	{ MODKEY,                       XK_minus,  setgap,         {.i = -1} },
+	{ MODKEY|ShiftMask,             XK_equal,  setborder,      {.i = +1} },
+	{ MODKEY|ShiftMask,             XK_minus,  setborder,      {.i = -1} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscreen,{0} },
@@ -400,6 +409,42 @@ resetlayout(const Arg *arg)
 	incnmaster(&a);
 	if (selmon->showbar != showbar)
 		togglebar(NULL);
+	if (arg) {
+		a.i = (int)gapdef - (int)gappx;
+		setgap(&a);
+		a.i = (int)borderdef - (int)borderpx;
+		setborder(&a);
+	}
+}
+
+void
+setborder(const Arg *arg)
+{
+	Monitor *m;
+	Client *c;
+
+	borderpx = MAX((int)borderpx + arg->i, 0);
+	for (m = mons; m; m = m->next)
+		for (c = m->clients; c; c = c->next)
+			setclientborder(c);
+	arrangemon(selmon);
+}
+
+void
+setclientborder(Client *c)
+{
+	/* disable borders for full screen windows */
+	c->bw = borderpx * (!c->isfullscreen);
+	XWindowChanges wc;
+	wc.border_width = c->bw;
+	XConfigureWindow(dpy, c->win, CWBorderWidth, &wc);
+}
+
+void
+setgap(const Arg *arg)
+{
+	gappx = MAX((int)gappx + arg->i, 0);
+	arrange(selmon);
 }
 
 void
