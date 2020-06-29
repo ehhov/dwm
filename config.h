@@ -23,6 +23,7 @@ static const char *colors[][3]           = {
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
 
+static void focusurgent(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
 
 /* autostart commands */
@@ -132,6 +133,22 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
+
+void
+focusurgent(const Arg *arg)
+{
+	Client *c;
+	int i;
+	for(c=selmon->clients; c && !c->isurgent; c=c->next);
+	if(c) {
+		for(i=0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
+		if(i < LENGTH(tags)) {
+			const Arg a = {.ui = 1 << i};
+			view(&a);
+			focus(c);
+		}
+	}
+}
 
 void
 togglefullscreen(const Arg *arg)

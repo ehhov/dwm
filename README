@@ -8,6 +8,7 @@ I have applied patches:
  - cool autostart
  - systray
  - actualfullscreen
+ - focusurgent
 
 Other changes:
  - New make target: entry. You can copy dwm.desktop to 
