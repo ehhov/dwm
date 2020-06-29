@@ -9,6 +9,7 @@ I have applied patches:
  - systray
  - actualfullscreen
  - focusurgent
+ - movestack
 
 Other changes:
  - New make target: entry. You can copy dwm.desktop to 
