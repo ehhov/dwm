@@ -19,6 +19,19 @@ static const char *colors[][3]      = {
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
 
+
+/* autostart commands */
+static const char *const autostart[] = {
+	"sh", "-c", "xrdb -load ~/.Xresources", NULL,
+	"sh", "-c", "feh --bg-fill ~/.wallpapers/foggy-forest-light.jpg", NULL,
+	"sh", "-c", "~/.bin/kb", NULL,
+	"dwms", NULL,
+	"clipmenud", NULL,
+	"dunst", NULL,
+	"picom", NULL,
+	NULL /* terminate */
+};
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
