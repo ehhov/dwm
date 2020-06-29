@@ -33,6 +33,7 @@ static void tile_deck(Monitor *m);
 static void monocle_gaps(Monitor *m);
 static void focusurgent(const Arg *arg);
 static void movestack(const Arg *arg);
+static void resetlayout(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
 
 /* autostart commands */
@@ -384,6 +385,20 @@ movestack(const Arg *arg) {
 
 		arrange(selmon);
 	}
+}
+
+void
+resetlayout(const Arg *arg)
+{
+	Arg a;
+	a.v = &layouts[0];
+	setlayout(&a);
+	a.f = mfact - selmon->mfact;
+	setmfact(&a);
+	a.i = nmaster - selmon->nmaster;
+	incnmaster(&a);
+	if (selmon->showbar != showbar)
+		togglebar(NULL);
 }
 
 void

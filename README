@@ -10,6 +10,8 @@ I have applied patches:
  - actualfullscreen
  - focusurgent
  - movestack
+ - resetlayout (my variant, follow RESLAY in dwm.c and see resetlayout() 
+   in config.h)
 
 Other changes:
  - New make target: entry. You can copy dwm.desktop to 
