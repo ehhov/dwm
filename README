@@ -12,6 +12,7 @@ I have applied patches:
  - movestack
  - resetlayout (my variant, follow RESLAY in dwm.c and see resetlayout() 
    in config.h)
+ - alwaysfullscreen
 
 Other changes:
  - New make target: entry. You can copy dwm.desktop to 
