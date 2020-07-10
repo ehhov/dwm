@@ -180,9 +180,11 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_a,      setlayout,      {.v = &layouts[8]} },
 	{ MODKEY,                       XK_equal,  setgap,         {.i = +1} },
 	{ MODKEY,                       XK_minus,  setgap,         {.i = -1} },
+	{ MODKEY,                       XK_BackSpace,setgap,       {.i =  0} },
 	{ MODKEY|ShiftMask,             XK_equal,  setborder,      {.i = +1} },
 	{ MODKEY|ShiftMask,             XK_minus,  setborder,      {.i = -1} },
-	{ Alt|Ctrl,                     XK_space,  resetlayout,    {.i =  1} },
+	{ MODKEY|ShiftMask,             XK_BackSpace,setborder,    {.i =  0} },
+	{ Alt|Ctrl,                     XK_space,  resetlayout,    {0} },
 	{ Alt|Shift,                    XK_space,  togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscreen,{0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -510,12 +512,6 @@ resetlayout(const Arg *arg)
 	incnmaster(&a);
 	if (selmon->showbar != showbar)
 		togglebar(NULL);
-	if (arg) {
-		a.i = (int)gapdef - (int)gappx;
-		setgap(&a);
-		a.i = (int)borderdef - (int)borderpx;
-		setborder(&a);
-	}
 }
 
 void
@@ -524,7 +520,11 @@ setborder(const Arg *arg)
 	Monitor *m;
 	Client *c;
 
-	borderpx = MAX((int)borderpx + arg->i, 0);
+	if (arg->i)
+		borderpx = MAX((int)borderpx + arg->i, 0);
+	else
+		borderpx = borderdef;
+
 	for (m = mons; m; m = m->next)
 		for (c = m->clients; c; c = c->next)
 			setclientborder(c);
@@ -541,10 +541,14 @@ setclientborder(Client *c)
 	XConfigureWindow(dpy, c->win, CWBorderWidth, &wc);
 }
 
+
 void
 setgap(const Arg *arg)
 {
-	gappx = MAX((int)gappx + arg->i, 0);
+	if (arg->i)
+		gappx = MAX((int)gappx + arg->i, 0);
+	else
+		gappx = gapdef;
 	arrange(selmon);
 }
 
