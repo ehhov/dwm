@@ -43,6 +43,8 @@ static const char *colors[][3]      = {
 
 /* Custom functions */
 static void tile_gaps(Monitor *m);
+static void tile_right_gaps(Monitor *m);
+static void tile_right(Monitor *m);
 static void tile_vert_gaps(Monitor *m);
 static void tile_vert(Monitor *m);
 static void tile_deck_gaps(Monitor *m);
@@ -99,6 +101,8 @@ static const Layout layouts[] = {
 	{ "[V]",      tile_vert },
 	{ "[D]",      tile_deck_gaps },
 	{ "[D]",      tile_deck },
+	{ "[R]",      tile_right_gaps },
+	{ "[R]",      tile_right },
 };
 
 /* key definitions */
@@ -178,6 +182,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_v,      setlayout,      {.v = &layouts[6]} },
 	{ MODKEY,                       XK_a,      setlayout,      {.v = &layouts[7]} },
 	{ MODKEY|ShiftMask,             XK_a,      setlayout,      {.v = &layouts[8]} },
+	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[9]} },
+	{ MODKEY|ShiftMask,             XK_r,      setlayout,      {.v = &layouts[10]} },
 	{ MODKEY,                       XK_equal,  setgap,         {.i = +1} },
 	{ MODKEY,                       XK_minus,  setgap,         {.i = -1} },
 	{ MODKEY,                       XK_BackSpace,setgap,       {.i =  0} },
@@ -300,6 +306,65 @@ tile_gaps(Monitor *m)
 			resize(c, m->wx + mw + gappx/ns, m->wy + ty, m->ww - mw - (2*c->bw) - gappx*(5-ns)/2, h - (2*c->bw), 0);
 			if (ty + HEIGHT(c) + gappx < m->wh)
 				ty += HEIGHT(c) + gappx;
+		}
+}
+
+void
+tile_right_gaps(Monitor *m)
+{
+	unsigned int i, n, h, mw, my, ty, ns;
+	Client *c;
+
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if (n == 0)
+		return;
+
+	if (n > m->nmaster) {
+		mw = m->nmaster ? m->ww * (1 - m->mfact) : 0;
+		ns = m->nmaster > 0 ? 2 : 1;
+	} else {
+		mw = m->ww;
+		ns = 1;
+	}
+	for (i = 0, my = ty = gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		if (i < m->nmaster) {
+			h = (m->wh - my) / (MIN(n, m->nmaster) - i) - gappx;
+			resize(c, m->wx + m->ww - mw + gappx/ns, m->wy + my, mw - (2*c->bw) - gappx*(5-ns)/2, h - (2*c->bw), 0);
+			if (my + HEIGHT(c) + gappx < m->wh)
+				my += HEIGHT(c) + gappx;
+		} else {
+			h = (m->wh - ty) / (n - i) - gappx;
+			resize(c, m->wx + gappx, m->wy + ty, m->ww - mw - (2*c->bw) - gappx*(5-ns)/2, h - (2*c->bw), 0);
+			if (ty + HEIGHT(c) + gappx < m->wh)
+				ty += HEIGHT(c) + gappx;
+		}
+}
+
+void
+tile_right(Monitor *m)
+{
+	unsigned int i, n, h, mw, my, ty;
+	Client *c;
+
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if (n == 0)
+		return;
+
+	if (n > m->nmaster)
+		mw = m->nmaster ? m->ww * (1 - m->mfact) : 0;
+	else
+		mw = m->ww;
+	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		if (i < m->nmaster) {
+			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+			resize(c, m->wx + m->ww - mw, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
+			if (my + HEIGHT(c) < m->wh)
+				my += HEIGHT(c);
+		} else {
+			h = (m->wh - ty) / (n - i);
+			resize(c, m->wx, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
+			if (ty + HEIGHT(c) < m->wh)
+				ty += HEIGHT(c);
 		}
 }
 
