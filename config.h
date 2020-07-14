@@ -6,7 +6,7 @@
 static const unsigned int borderdef = 0;         /* border pixel of windows */
 static       unsigned int borderpx  = borderdef; /* border pixel of windows */
 static const unsigned int borderpxf = 5;         /* floating windows border increment parameter */
-static const unsigned int gapdef    = 5;         /* gap pixel between windows */
+static const unsigned int gapdef    = 4;         /* gap pixel between windows */
 static       unsigned int gappx     = gapdef;    /* gap pixel between windows */
 static const unsigned int snap      = 32;        /* snap pixel */
 static const int showsystray        = 1;         /* 0 means no systray */
@@ -18,7 +18,9 @@ static const unsigned int systraypinning = 0;    /* 0: sloppy systray follows se
 static const unsigned int systrayspacing = 2;    /* systray spacing */
 static const int systraypinningfailfirst = 1;    /* 1: if pinning fails, display systray on the first monitor, 0: display systray on the last monitor*/
 //static const char dmenufont[]       = "Iosevka:size=10:antialias=true:autohint=true";
-static const char dmenufont[]       = "uw ttyp0:pixelsize=18";
+static const char dmenufont[]       = "Monospace:size=9:antialias=true:autohint=true";
+//static const char dmenufont[]       = "xos4 Terminus:pixelsize=18";
+//static const char dmenufont[]       = "uw ttyp0:pixelsize=18";
 static const char *fonts[]          = { dmenufont, "monospace:size=10", "symbola" };
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -61,9 +63,10 @@ static void togglefullscreen(const Arg *arg);
 /* autostart commands */
 static const char *const autostart[] = {
 	"sh", "-c", "xrdb -load ~/.Xresources", NULL,
-	"sh", "-c", "feh --bg-fill ~/.wallpapers/foggy-forest-light.jpg", NULL,
+	"sh", "-c", "feh --bg-fill ~/Pictures/Wallpapers/november-2020-calendar-wallpaper.jpg", NULL,
 	"sh", "-c", "~/.bin/kb", NULL,
 	"dwms", NULL,
+	"emonc", "-l", NULL,
 	"clipmenud", NULL,
 	"dunst", NULL,
 	"picom", NULL,
@@ -214,22 +217,23 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask, XK_s,      spawn,          {.v = suspendcmd} },
 
 	/* External monitor configuration */
+	{ Win|Alt,                      XK_a,      spawn,          SHCMD("~/.bin/monitor auto") },
 	{ Win|Alt,                      XK_d,      spawn,          SHCMD("~/.bin/monitor dis") },
 	{ Win|Alt,                      XK_e,      spawn,          SHCMD("~/.bin/monitor ext") },
-	{ Win|Alt,                      XK_s,      spawn,          SHCMD("~/.bin/monitor split") },
-	{ Win|Alt,                      XK_b,      spawn,          SHCMD("~/.bin/monitor dup") },
+	{ Win|Alt,                      XK_m,      spawn,          SHCMD("~/.bin/monitor max") },
 
 	{ Win|Alt,                      XK_space,  spawn,          SHCMD("~/.bin/kb") },
 
 	/* Screenshots */
 	{ 0,                            XK_Print,  spawn,          SHCMD("~/.bin/print screen") },
+	{ ControlMask,                  XK_Print,  spawn,          SHCMD("~/.bin/print monitor") },
 	{ ShiftMask,                    XK_Print,  spawn,          SHCMD("~/.bin/print delayed") },
 	{ Alt,                          XK_Print,  spawn,          SHCMD("~/.bin/print active") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("~/.bin/print region") },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("~/.bin/print two") },
 	{ MODKEY|ShiftMask,             XK_d,      spawn,          SHCMD("~/.bin/print noborder") },
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("~/.bin/print quit") },
-	{ MODKEY,                       XK_Print,  spawn,          SHCMD("spectacle") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("~/.bin/print save") },
 	/* Color picker */
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("~/.bin/print pick") },
 
